@@ -10,18 +10,12 @@ public class ItemEntity {
     private int itemId;
     @Column(name = "itemName")
     private String itemName;
-    @Column(name = "createDate")
-    private String createDate;
-    @Column(name = "lastUpdate")
-    private String lastUpdate;
 
     public ItemEntity(){}
 
-    public ItemEntity(int itemId, String itemName, String createDate, String lastUpdate) {
+    public ItemEntity(int itemId, String itemName) {
         this.itemId = itemId;
         this.itemName = itemName;
-        this.createDate = createDate;
-        this.lastUpdate = lastUpdate;
     }
 
     public int getItemId() {
@@ -38,21 +32,5 @@ public class ItemEntity {
 
     public void setItemName(String itemName) {
         this.itemName = itemName;
-    }
-
-    public String getCreateDate() {
-        return createDate;
-    }
-
-    public void setCreateDate(String createDate) {
-        this.createDate = createDate;
-    }
-
-    public String getLastUpdate() {
-        return lastUpdate;
-    }
-
-    public void setLastUpdate(String lastUpdate) {
-        this.lastUpdate = lastUpdate;
     }
 }

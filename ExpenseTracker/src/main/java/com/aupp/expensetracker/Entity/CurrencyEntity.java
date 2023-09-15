@@ -14,20 +14,14 @@ public class CurrencyEntity {
     private int currencyValue;
     @Column(name = "currencyRateValue")
     private int currencyRateValue;
-    @Column(name = "createDate")
-    private String createDate;
-    @Column(name = "updateDate")
-    private String updateDate;
 
     public CurrencyEntity(){}
 
-    public CurrencyEntity(int currencyId, String currencyName, int currencyValue, int currencyRateValue, String createDate, String updateDate) {
+    public CurrencyEntity(int currencyId, String currencyName, int currencyValue, int currencyRateValue) {
         this.currencyId = currencyId;
         this.currencyName = currencyName;
         this.currencyValue = currencyValue;
         this.currencyRateValue = currencyRateValue;
-        this.createDate = createDate;
-        this.updateDate = updateDate;
     }
 
     public int getCurrencyId() {
@@ -60,21 +54,5 @@ public class CurrencyEntity {
 
     public void setCurrencyRateValue(int currencyRateValue) {
         this.currencyRateValue = currencyRateValue;
-    }
-
-    public String getCreateDate() {
-        return createDate;
-    }
-
-    public void setCreateDate(String createDate) {
-        this.createDate = createDate;
-    }
-
-    public String getUpdateDate() {
-        return updateDate;
-    }
-
-    public void setUpdateDate(String updateDate) {
-        this.updateDate = updateDate;
     }
 }

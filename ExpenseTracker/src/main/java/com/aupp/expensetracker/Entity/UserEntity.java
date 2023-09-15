@@ -2,8 +2,10 @@ package com.aupp.expensetracker.Entity;
 
 import jakarta.persistence.*;
 
+import java.util.Collection;
+
 @Entity
-@Table(name = "userInformation")
+@Table(name = "userInformation", uniqueConstraints = @UniqueConstraint(columnNames = "userEmail"))
 public class UserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -16,24 +18,14 @@ public class UserEntity {
     private String userPassword;
     @Column(name = "isVerify")
     private Boolean isVerify;
-    @Column(name = "createDate")
-    private String createDate;
-    @Column(name = "lastUpdate")
-    private String lastUpdate;
-    @Column(name = "removeDate")
-    private String removeDate;
-
     public UserEntity(){}
 
-    public UserEntity(int userId, String userName, String userEmail, String userPassword, Boolean isVerify, String createDate, String lastUpdate, String removeDate) {
+    public UserEntity(int userId, String userName, String userEmail, String userPassword, Boolean isVerify) {
         this.userId = userId;
         this.userName = userName;
         this.userEmail = userEmail;
         this.userPassword = userPassword;
         this.isVerify = isVerify;
-        this.createDate = createDate;
-        this.lastUpdate = lastUpdate;
-        this.removeDate = removeDate;
     }
 
     public int getUserId() {
@@ -74,29 +66,5 @@ public class UserEntity {
 
     public void setVerify(Boolean verify) {
         isVerify = verify;
-    }
-
-    public String getCreateDate() {
-        return createDate;
-    }
-
-    public void setCreateDate(String createDate) {
-        this.createDate = createDate;
-    }
-
-    public String getLastUpdate() {
-        return lastUpdate;
-    }
-
-    public void setLastUpdate(String lastUpdate) {
-        this.lastUpdate = lastUpdate;
-    }
-
-    public String getRemoveDate() {
-        return removeDate;
-    }
-
-    public void setRemoveDate(String removeDate) {
-        this.removeDate = removeDate;
     }
 }

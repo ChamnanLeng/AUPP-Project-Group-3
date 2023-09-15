@@ -9,11 +9,11 @@ public class ExpenseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int expTransactionId;
     @Column(name = "userId")
-    private String userId;
+    private int userId;
     @Column(name = "itemId")
-    private String itemId;
+    private int itemId;
     @Column(name = "currencyId")
-    private String currencyId;
+    private int currencyId;
     @Column(name = "expenseAmount")
     private double expenseAmount;
     @Column(name = "expenseDate")
@@ -21,7 +21,7 @@ public class ExpenseEntity {
 
     public ExpenseEntity(){}
 
-    public ExpenseEntity(int expTransactionId, String userId, String itemId, String currencyId, double expenseAmount, String expenseDate) {
+    public ExpenseEntity(int expTransactionId, int userId, int itemId, int currencyId, double expenseAmount, String expenseDate) {
         this.expTransactionId = expTransactionId;
         this.userId = userId;
         this.itemId = itemId;
@@ -38,27 +38,27 @@ public class ExpenseEntity {
         this.expTransactionId = expTransactionId;
     }
 
-    public String getUserId() {
+    public int getUserId() {
         return userId;
     }
 
-    public void setUserId(String userId) {
+    public void setUserId(int userId) {
         this.userId = userId;
     }
 
-    public String getItemId() {
+    public int getItemId() {
         return itemId;
     }
 
-    public void setItemId(String itemId) {
+    public void setItemId(int itemId) {
         this.itemId = itemId;
     }
 
-    public String getCurrencyId() {
+    public int getCurrencyId() {
         return currencyId;
     }
 
-    public void setCurrencyId(String currencyId) {
+    public void setCurrencyId(int currencyId) {
         this.currencyId = currencyId;
     }
 
