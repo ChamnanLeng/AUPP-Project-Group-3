@@ -7,28 +7,28 @@ import jakarta.persistence.*;
 public class ItemEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private String itemId;
-    @Column
+    private int itemId;
+    @Column(name = "itemName")
     private String itemName;
-    @Column
+    @Column(name = "createDate")
     private String createDate;
-    @Column
+    @Column(name = "lastUpdate")
     private String lastUpdate;
 
     public ItemEntity(){}
 
-    public ItemEntity(String itemId, String itemName, String createDate, String lastUpdate) {
+    public ItemEntity(int itemId, String itemName, String createDate, String lastUpdate) {
         this.itemId = itemId;
         this.itemName = itemName;
         this.createDate = createDate;
         this.lastUpdate = lastUpdate;
     }
 
-    public String getItemId() {
+    public int getItemId() {
         return itemId;
     }
 
-    public void setItemId(String itemId) {
+    public void setItemId(int itemId) {
         this.itemId = itemId;
     }
 

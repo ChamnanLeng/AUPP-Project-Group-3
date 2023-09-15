@@ -7,21 +7,21 @@ import jakarta.persistence.*;
 public class CurrencyEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private String currencyId;
-    @Column
+    private int currencyId;
+    @Column(name = "currencyName")
     private String currencyName;
-    @Column
+    @Column(name = "currencyValue")
     private int currencyValue;
-    @Column
+    @Column(name = "currencyRateValue")
     private int currencyRateValue;
-    @Column
+    @Column(name = "createDate")
     private String createDate;
-    @Column
+    @Column(name = "updateDate")
     private String updateDate;
 
     public CurrencyEntity(){}
 
-    public CurrencyEntity(String currencyId, String currencyName, int currencyValue, int currencyRateValue, String createDate, String updateDate) {
+    public CurrencyEntity(int currencyId, String currencyName, int currencyValue, int currencyRateValue, String createDate, String updateDate) {
         this.currencyId = currencyId;
         this.currencyName = currencyName;
         this.currencyValue = currencyValue;
@@ -30,11 +30,11 @@ public class CurrencyEntity {
         this.updateDate = updateDate;
     }
 
-    public String getCurrencyId() {
+    public int getCurrencyId() {
         return currencyId;
     }
 
-    public void setCurrencyId(String currencyId) {
+    public void setCurrencyId(int currencyId) {
         this.currencyId = currencyId;
     }
 

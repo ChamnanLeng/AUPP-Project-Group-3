@@ -7,25 +7,25 @@ import jakarta.persistence.*;
 public class UserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private String userId;
-    @Column
+    private int userId;
+    @Column(name = "userName")
     private String userName;
-    @Column
+    @Column(name = "userEmail")
     private String userEmail;
-    @Column
+    @Column(name = "userPassword")
     private String userPassword;
-    @Column
+    @Column(name = "isVerify")
     private Boolean isVerify;
-    @Column
+    @Column(name = "createDate")
     private String createDate;
-    @Column
+    @Column(name = "lastUpdate")
     private String lastUpdate;
-    @Column
+    @Column(name = "removeDate")
     private String removeDate;
 
     public UserEntity(){}
 
-    public UserEntity(String userId, String userName, String userEmail, String userPassword, Boolean isVerify, String createDate, String lastUpdate, String removeDate) {
+    public UserEntity(int userId, String userName, String userEmail, String userPassword, Boolean isVerify, String createDate, String lastUpdate, String removeDate) {
         this.userId = userId;
         this.userName = userName;
         this.userEmail = userEmail;
@@ -36,11 +36,11 @@ public class UserEntity {
         this.removeDate = removeDate;
     }
 
-    public String getUserId() {
+    public int getUserId() {
         return userId;
     }
 
-    public void setUserId(String userId) {
+    public void setUserId(int userId) {
         this.userId = userId;
     }
 

@@ -7,21 +7,21 @@ import jakarta.persistence.*;
 public class ExpenseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private String expTransactionId;
-    @Column
+    private int expTransactionId;
+    @Column(name = "userId")
     private String userId;
-    @Column
+    @Column(name = "itemId")
     private String itemId;
-    @Column
+    @Column(name = "currencyId")
     private String currencyId;
-    @Column
+    @Column(name = "expenseAmount")
     private double expenseAmount;
-    @Column
+    @Column(name = "expenseDate")
     private String expenseDate;
 
     public ExpenseEntity(){}
 
-    public ExpenseEntity(String expTransactionId, String userId, String itemId, String currencyId, double expenseAmount, String expenseDate) {
+    public ExpenseEntity(int expTransactionId, String userId, String itemId, String currencyId, double expenseAmount, String expenseDate) {
         this.expTransactionId = expTransactionId;
         this.userId = userId;
         this.itemId = itemId;
@@ -30,11 +30,11 @@ public class ExpenseEntity {
         this.expenseDate = expenseDate;
     }
 
-    public String getExpTransactionId() {
+    public int getExpTransactionId() {
         return expTransactionId;
     }
 
-    public void setExpTransactionId(String expTransactionId) {
+    public void setExpTransactionId(int expTransactionId) {
         this.expTransactionId = expTransactionId;
     }
 
