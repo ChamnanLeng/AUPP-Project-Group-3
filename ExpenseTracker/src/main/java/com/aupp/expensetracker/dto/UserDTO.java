@@ -1,27 +1,14 @@
-package com.aupp.expensetracker.Entity;
+package com.aupp.expensetracker.dto;
 
-
-import jakarta.persistence.*;
-
-@Entity
-@Table(name="user")
-public class UserEntity {
-    @Id
-    @Column(name = "userId")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class UserDTO {
     private int userId;
-
-    @Column(name = "userName")
     private String userName;
-
-    @Column(name = "email")
     private String email;
-
-    @Column(name = "password")
     private String password;
-    public UserEntity(){}
 
-    public UserEntity(int userId, String userName, String email, String password) {
+    public UserDTO() {}
+
+    public UserDTO(int userId, String userName, String email, String password) {
         this.userId = userId;
         this.userName = userName;
         this.email = email;
