@@ -6,7 +6,7 @@
 </head>
 <body>
 <h1>User Registration</h1>
-<form th:action="@{/api/v1/user/create}" method="post" th:object="${registerUser}">
+<form th:action="@{/user/create}" method="post" th:object="${registration}">
     <label for="userName">Username:</label>
     <input type="text" id="userName" name="userName" required><br><br>
 

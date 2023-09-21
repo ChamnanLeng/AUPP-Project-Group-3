@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.Map;
 
 @Controller
-@RequestMapping("api/v1/user")
+@RequestMapping("/user")
 public class UserController {
 
     @Autowired
@@ -60,27 +60,35 @@ public class UserController {
         }
     }
 
-    @GetMapping("/register")
+    @GetMapping("/registration")
     public String showRegisterForm(Model model){
-        model.addAttribute("registerUser", new UserEntity());
-        return "registerPage";
+        model.addAttribute("registration", new UserEntity());
+        return "register";
     }
 
     @PostMapping("/create")
-    public String createUser(@ModelAttribute("registerUser") @Validated UserEntity userEntity, BindingResult bindingResult, Model model) {
-        //String id = userService.registerUser(userEntity);
+    public String createUser(@ModelAttribute("registration") @Validated UserEntity userEntity, BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()){
-            //model.addAttribute("registerUser", new UserEntity());
-            return "registerPage";
+            return "register";
         }
         userService.createUser(userEntity);
         return "redirect:/expenses/page";
     }
 
-    @PostMapping("/login")
-    public ResponseEntity<?> loginUser(@RequestBody UserEntity userEntity) {
+    @GetMapping("/login_user")
+    public String showLoginForm(Model model){
+        model.addAttribute("login_user", new UserEntity());
+        return "login";
+    }
+
+    @PostMapping("/login_page")
+    public String loginUser(@ModelAttribute("login_user") @Validated UserEntity userEntity) {
         LoginMesage loginResponse = userService.loginUser(userEntity);
-        return ResponseEntity.ok(loginResponse);
+        if (loginResponse.getStatus().equals(true)){
+            return "redirect:/expenses/page";
+        }else {
+            return "login";
+        }
     }
 
     @GetMapping("/{id}")
