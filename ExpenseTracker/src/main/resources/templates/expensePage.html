@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Expense Tracker</title>
+</head>
+<body>
+    <h1>Expense Tracker</h1>
+    <!-- Expense Input Section -->
+    <section>
+        <h2>Expense Record</h2>
+        <form th:action="@{/expenses/create}" method="post" th:object="${expense}">
+            <label for="expenseAmount">Amount:</label>
+            <input type="number" id="expenseAmount" name="expenseAmount" required>
+
+            <label for="itemId">Item:</label>
+            <select id="itemId" name="itemId.itemId" required>
+                <option th:each="item : ${items}" th:value="${item.itemId}" th:text="${item.itemName}"></option>
+            </select>
+
+            <label for="currencyId">Currency:</label>
+            <select id="currencyId" name="currencyId.CurrencyId" required>
+                <option th:each="currency : ${currencies}" th:value="${currency.currencyId}" th:text="${currency.currencyName}"></option>
+            </select>
+
+            <label for="expenseDate"></label>
+            <input type="date" id="expenseDate" name="expenseDate" required>
+
+            <button type="submit">Submit</button>
+        </form>
+    </section>
+
+    <!-- List of Recorded Expenses Section -->
+    <section>
+        <h2>Recorded Expenses</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Item</th>
+                    <th>Amount</th>
+                    <th>Currency</th>
+                    <th>Expense Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="expense:${expenses}">
+                    <td th:text="${expense.expTransactionId}"></td>
+                    <td>
+                        <span th:if="${expense.itemId != null}" th:text="${expense.itemId.itemName}"></span>
+                        <span th:if="${expense.itemId == null}">N/A</span>
+                    </td>
+                    <td th:text="${expense.expenseAmount}"></td>
+                    <td>
+                        <span th:if="${expense.currencyId != null}" th:text="${expense.currencyId.currencyName}"></span>
+                        <span th:if="${expense.currencyId == null}">N/A</span>
+                    </td>
+                    <td th:text="${expense.expenseDate}"></td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+</body>
+</html>

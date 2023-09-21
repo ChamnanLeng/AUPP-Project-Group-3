@@ -13,7 +13,6 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 
 @Service
@@ -22,11 +21,16 @@ public class UserImpl implements UserService {
     private static final long EXPIRE_TOKEN_AFTER_MINUTES = 30;
 
     @Autowired
-    private UserRepository userRepo;
+    private UserRepository userRepository;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Autowired
+    public UserImpl(UserRepository userRepository, PasswordEncoder passwordEncoder){
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
+    }
     @Override
     public String registerUser(UserEntity userEntity) {
         UserEntity user = new UserEntity(
@@ -37,9 +41,9 @@ public class UserImpl implements UserService {
                 userEntity.getToken(),
                 userEntity.getTokenCreationDate()
         );
-        UserEntity user1 = userRepo.findByEmail(userEntity.getEmail());
+        UserEntity user1 = userRepository.findByEmail(userEntity.getEmail());
         if (user1 == null){
-            userRepo.save(user);
+            userRepository.save(user);
             return user.getUserName();
         }else {
             return "User has been register!";
@@ -52,13 +56,13 @@ public class UserImpl implements UserService {
     @Override
     public LoginMesage loginUser(UserEntity userEntity) {
         String msg = "";
-        UserEntity user1 = userRepo.findByEmail(userEntity.getEmail());
+        UserEntity user1 = userRepository.findByEmail(userEntity.getEmail());
         if (user1 != null) {
             String password = userEntity.getPassword();
             String encodedPassword = user1.getPassword();
             Boolean isPwdRight = passwordEncoder.matches(password, encodedPassword);
             if (isPwdRight) {
-                Optional<UserEntity> user = userRepo.findOneByEmailAndPassword(userEntity.getEmail(), encodedPassword);
+                Optional<UserEntity> user = userRepository.findOneByEmailAndPassword(userEntity.getEmail(), encodedPassword);
                 if (user.isPresent()) {
                     return new LoginMesage("Login Success", true);
                 } else {
@@ -74,28 +78,37 @@ public class UserImpl implements UserService {
 
     @Override
     public UserEntity findById(Integer id) {
-        return userRepo.findById(id).get();
+        return userRepository.findById(id).get();
     }
 
     @Override
     public UserEntity findByEmail(String email) {
-        return userRepo.findByEmail(email);
+        return userRepository.findByEmail(email);
     }
 
     @Override
     public void delete(UserEntity user) {
-        userRepo.delete(user);
+        userRepository.delete(user);
+    }
+
+    @Override
+    public void saveUser(UserEntity user) {
+        userRepository.save(userEntity);
+    }
+
+    @Override
+    public void createUser(UserEntity userEntity) {
+        String textPassword = userEntity.getPassword();
+        String encodePassword = passwordEncoder.encode(textPassword);
+        userEntity.setPassword(encodePassword);
+        userRepository.save(userEntity);
     }
     @Override
-    public void save(UserEntity user) {
-        userRepo.save(user);
-    }
-    @Override
-    public List< UserEntity > getAllUsersList() { return userRepo.findAll(); }
+    public List< UserEntity > getAllUsersList() { return userRepository.findAll(); }
 
     @Override
     public String forgotPassword(String email) {
-        Optional<UserEntity> userOptional = Optional.ofNullable(userRepo.findByEmail(email));
+        Optional<UserEntity> userOptional = Optional.ofNullable(userRepository.findByEmail(email));
         if (!userOptional.isPresent()) {
             return "Invalid email id.";
         }
@@ -105,14 +118,14 @@ public class UserImpl implements UserService {
 
         user.setTokenCreationDate(LocalDateTime.now());
 
-        user = userRepo.save(user);
+        user = userRepository.save(user);
 
         return user.getToken();
     }
 
     @Override
     public String resetPassword(String token, String password) {
-        Optional<UserEntity> userOptional = Optional.ofNullable(userRepo.findByToken(token));
+        Optional<UserEntity> userOptional = Optional.ofNullable(userRepository.findByToken(token));
         if (!userOptional.isPresent()) {
             return "Invalid token.";
         }
@@ -129,7 +142,7 @@ public class UserImpl implements UserService {
         user.setToken(null);
         user.setTokenCreationDate(null);
 
-        userRepo.save(user);
+        userRepository.save(user);
 
         return "Your password has been successfully updated.";
     }

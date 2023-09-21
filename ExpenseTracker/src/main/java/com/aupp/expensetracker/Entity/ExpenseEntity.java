@@ -7,13 +7,17 @@ import jakarta.persistence.*;
 public class ExpenseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "expTransactionId")
     private int expTransactionId;
-    @Column(name = "userId")
-    private int userId;
-    @Column(name = "itemId")
-    private int itemId;
-    @Column(name = "currencyId")
-    private int currencyId;
+    @ManyToOne
+    @JoinColumn(name = "userId")
+    private UserEntity userId;
+    @ManyToOne
+    @JoinColumn(name = "itemId")
+    private ItemEntity itemId;
+    @ManyToOne
+    @JoinColumn(name = "currencyId")
+    private CurrencyEntity currencyId;
     @Column(name = "expenseAmount")
     private double expenseAmount;
     @Column(name = "expenseDate")
@@ -21,7 +25,7 @@ public class ExpenseEntity {
 
     public ExpenseEntity(){}
 
-    public ExpenseEntity(int expTransactionId, int userId, int itemId, int currencyId, double expenseAmount, String expenseDate) {
+    public ExpenseEntity(int expTransactionId, UserEntity userId, ItemEntity itemId, CurrencyEntity currencyId, double expenseAmount, String expenseDate) {
         this.expTransactionId = expTransactionId;
         this.userId = userId;
         this.itemId = itemId;
@@ -38,27 +42,27 @@ public class ExpenseEntity {
         this.expTransactionId = expTransactionId;
     }
 
-    public int getUserId() {
+    public UserEntity getUserId() {
         return userId;
     }
 
-    public void setUserId(int userId) {
+    public void setUserId(UserEntity userId) {
         this.userId = userId;
     }
 
-    public int getItemId() {
+    public ItemEntity getItemId() {
         return itemId;
     }
 
-    public void setItemId(int itemId) {
+    public void setItemId(ItemEntity itemId) {
         this.itemId = itemId;
     }
 
-    public int getCurrencyId() {
+    public CurrencyEntity getCurrencyId() {
         return currencyId;
     }
 
-    public void setCurrencyId(int currencyId) {
+    public void setCurrencyId(CurrencyEntity currencyId) {
         this.currencyId = currencyId;
     }
 

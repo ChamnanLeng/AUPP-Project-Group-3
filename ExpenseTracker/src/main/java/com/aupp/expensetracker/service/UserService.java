@@ -13,7 +13,8 @@ public interface UserService {
     UserEntity findById(Integer id);
     UserEntity findByEmail(String email);
     void delete(UserEntity user);
-    void save(UserEntity user);
+    void saveUser(UserEntity user);
     String forgotPassword(String email);
     String resetPassword(String token, String password);
+    void createUser(UserEntity user);
 }
