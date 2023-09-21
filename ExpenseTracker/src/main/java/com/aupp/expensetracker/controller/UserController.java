@@ -1,14 +1,13 @@
 package com.aupp.expensetracker.controller;
 
 import com.aupp.expensetracker.Entity.UserEntity;
-import com.aupp.expensetracker.dto.LoginDTO;
-import com.aupp.expensetracker.dto.UserDTO;
 import com.aupp.expensetracker.response.LoginMesage;
 import com.aupp.expensetracker.service.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -25,15 +24,18 @@ public class UserController {
     @Autowired
     private ModelMapper modelMapper;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     @GetMapping("")
     public ResponseEntity<?> getUsers() {
         Map<String, Object> jsonResponseMap = new LinkedHashMap<>();
         List<UserEntity> listOfUsers = userService.getAllUsersList();
-        List<UserDTO> listOfUserDto = new ArrayList<>();
+        List<UserEntity> listOfUserDto = new ArrayList<>();
 
         if (!listOfUsers.isEmpty()) {
             for (UserEntity user : listOfUsers) {
-                listOfUserDto.add(modelMapper.map(user, UserDTO.class));
+                listOfUserDto.add(modelMapper.map(user, UserEntity.class));
             }
             jsonResponseMap.put("status", 1);
             jsonResponseMap.put("data", listOfUserDto);
@@ -48,14 +50,14 @@ public class UserController {
     }
 
     @PostMapping(path = "/save")
-    public String saveUser(@RequestBody UserDTO userDTO) {
-        String id = userService.registerUser(userDTO);
+    public String saveUser(@RequestBody UserEntity userEntity) {
+        String id = userService.registerUser(userEntity);
         return id;
     }
 
     @PostMapping(path = "/login")
-    public ResponseEntity<?> loginUser(@RequestBody LoginDTO loginDTO) {
-        LoginMesage loginResponse = userService.loginUser(loginDTO);
+    public ResponseEntity<?> loginUser(@RequestBody UserEntity userEntity) {
+        LoginMesage loginResponse = userService.loginUser(userEntity);
         return ResponseEntity.ok(loginResponse);
     }
 
@@ -64,10 +66,9 @@ public class UserController {
         Map<String, Object> jsonResponseMap = new LinkedHashMap<>();
         try {
             UserEntity user = userService.findById(id);
-            // Convert entity to DTO
-            UserDTO userDto = modelMapper.map(user, UserDTO.class);
+            UserEntity userEntity = modelMapper.map(user, UserEntity.class);
             jsonResponseMap.put("status", 1);
-            jsonResponseMap.put("data", userDto);
+            jsonResponseMap.put("data", userEntity);
             return new ResponseEntity<>(jsonResponseMap, HttpStatus.OK);
         } catch (Exception ex) {
             jsonResponseMap.clear();
@@ -95,24 +96,33 @@ public class UserController {
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<?> updateUser(@PathVariable Integer id, @RequestBody UserDTO userDto) {
+    public ResponseEntity<?> updateUser(@PathVariable Integer id, @RequestBody UserEntity userEntity) {
         Map<String, Object> jsonResponseMap = new LinkedHashMap<>();
         try {
             UserEntity user = userService.findById(id);
-            user.setUserName(userDto.getUserName());
-            user.setEmail(userDto.getEmail());
-            user.setPassword(userDto.getPassword());
-            if(user.getUserName().isEmpty() || user.getEmail().isEmpty() && user.getPassword().isEmpty()){
+            if (user == null) {
                 jsonResponseMap.put("status", 0);
-                jsonResponseMap.put("message", "Data is incorrect");
+                jsonResponseMap.put("message", "User not found");
                 return new ResponseEntity<>(jsonResponseMap, HttpStatus.NOT_FOUND);
             }
-            else {
-                userService.save(user);
-                jsonResponseMap.put("status", 1);
-                jsonResponseMap.put("data", userService.findById(id));
-                return new ResponseEntity<>(jsonResponseMap, HttpStatus.OK);
+
+            if (!userEntity.getUserName().isEmpty()) {
+                user.setUserName(userEntity.getUserName());
             }
+
+            if (!userEntity.getEmail().isEmpty()) {
+                user.setEmail(userEntity.getEmail());
+            }
+
+            if (!userEntity.getPassword().isEmpty()) {
+                String encodedPassword = passwordEncoder.encode(userEntity.getPassword());
+                user.setPassword(encodedPassword);
+            }
+
+            userService.save(user);
+            jsonResponseMap.put("status", 1);
+            jsonResponseMap.put("data", userService.findById(id));
+            return new ResponseEntity<>(jsonResponseMap, HttpStatus.OK);
         } catch (Exception ex) {
             jsonResponseMap.clear();
             jsonResponseMap.put("status", 0);

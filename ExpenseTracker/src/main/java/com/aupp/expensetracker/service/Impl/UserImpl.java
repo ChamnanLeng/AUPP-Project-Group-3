@@ -1,8 +1,6 @@
 package com.aupp.expensetracker.service.Impl;
 
 import com.aupp.expensetracker.Entity.UserEntity;
-import com.aupp.expensetracker.dto.LoginDTO;
-import com.aupp.expensetracker.dto.UserDTO;
 import com.aupp.expensetracker.repository.UserRepository;
 import com.aupp.expensetracker.response.LoginMesage;
 import com.aupp.expensetracker.service.UserService;
@@ -23,30 +21,36 @@ public class UserImpl implements UserService {
     private PasswordEncoder passwordEncoder;
 
     @Override
-    public String registerUser(UserDTO userDTO) {
+    public String registerUser(UserEntity userEntity) {
         UserEntity user = new UserEntity(
-                userDTO.getUserId(),
-                userDTO.getUserName(),
-                userDTO.getEmail(),
-                this.passwordEncoder.encode(userDTO.getPassword())
+                userEntity.getUserId(),
+                userEntity.getUserName(),
+                userEntity.getEmail(),
+                this.passwordEncoder.encode(userEntity.getPassword())
         );
-        userRepo.save(user);
-        return user.getUserName();
+        UserEntity user1 = userRepo.findByEmail(userEntity.getEmail());
+        if (user1 == null){
+            userRepo.save(user);
+            return user.getUserName();
+        }else {
+            return "User has been register!";
+        }
+
     }
 
-    UserDTO userDTO;
+    UserEntity userEntity;
 
     @Override
-    public LoginMesage loginUser(LoginDTO loginDTO) {
+    public LoginMesage loginUser(UserEntity userEntity) {
         String msg = "";
-        UserEntity user1 = userRepo.findByEmail(loginDTO.getEmail());
+        UserEntity user1 = userRepo.findByEmail(userEntity.getEmail());
         if (user1 != null) {
-            String password = loginDTO.getPassword();
+            String password = userEntity.getPassword();
             String encodedPassword = user1.getPassword();
             Boolean isPwdRight = passwordEncoder.matches(password, encodedPassword);
             if (isPwdRight) {
-                Optional<UserEntity> employee = userRepo.findOneByEmailAndPassword(loginDTO.getEmail(), encodedPassword);
-                if (employee.isPresent()) {
+                Optional<UserEntity> user = userRepo.findOneByEmailAndPassword(userEntity.getEmail(), encodedPassword);
+                if (user.isPresent()) {
                     return new LoginMesage("Login Success", true);
                 } else {
                     return new LoginMesage("Login Failed", false);
