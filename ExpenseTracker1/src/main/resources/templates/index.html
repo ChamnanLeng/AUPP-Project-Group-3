@@ -1,0 +1,219 @@
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout.html}">
+
+<body>
+<div layout:fragment="content" class="container-fluid">
+
+    <div class="row">
+        <div class="col-lg-12 d-flex align-items-stretch">
+            <div class="card w-100">
+                <div class="card-body p-4">
+                    <h5 class="card-title fw-semibold mb-4">Add Expense Item</h5>
+                    <div class="row mb-0">
+                        <div class="mb-4 col-xs-12 col-md-6 col-lg-3">
+                            <label class="form-label">Username</label>
+                            <select class="form-select" aria-label="Default select example">
+                                <option selected>Open this select menu</option>
+                                <option value="1">One</option>
+                                <option value="2">Two</option>
+                                <option value="3">Three</option>
+                            </select>
+                        </div>
+                        <div class="mb-4 col-xs-8 col-md-6 col-lg-3">
+                            <label class="form-label">Amount</label>
+                            <input type="number" class="form-control">
+                        </div>
+                        <div class="mb-4 col-xs-4 col-md-6 col-lg-3">
+                            <label class="form-label">Currency</label>
+                            <select class="form-select" aria-label="Default select example">
+                                <option selected>Open this select menu</option>
+                                <option value="1">One</option>
+                                <option value="2">Two</option>
+                                <option value="3">Three</option>
+                            </select>
+                        </div>
+                        <div class="mb-4 col-xs-12 col-md-6 col-lg-3">
+                            <label class="form-label">Select Date</label>
+                            <input id="date" width="276"/>
+                        </div>
+                        <div class="mb-4 col-xs-12">
+                            <button class="btn btn-primary">Submit</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12 d-flex align-items-stretch">
+            <div class="card w-100">
+                <div class="card-body p-4">
+                    <h5 class="card-title fw-semibold mb-4">Recent Transactions</h5>
+                    <div class="table-responsive">
+                        <table class="table text-nowrap mb-0 align-middle">
+                            <thead class="text-dark fs-4">
+                            <tr>
+                                <th class="border-bottom-0">
+                                    <h6 class="fw-semibold mb-0">Id</h6>
+                                </th>
+                                <th class="border-bottom-0">
+                                    <h6 class="fw-semibold mb-0">Items</h6>
+                                </th>
+                                <th class="border-bottom-0">
+                                    <h6 class="fw-semibold mb-0">Amount</h6>
+                                </th>
+                                <th class="border-bottom-0">
+                                    <h6 class="fw-semibold mb-0">Currency</h6>
+                                </th>
+                                <th class="border-bottom-0">
+                                    <h6 class="fw-semibold mb-0">Date</h6>
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td class="border-bottom-0"><h6 class="fw-semibold mb-0">1</h6></td>
+                                <td class="border-bottom-0">
+                                    <h6 class="fw-semibold mb-1">Sunil Joshi</h6>
+                                </td>
+                                <td class="border-bottom-0">
+                                    <h6 class="fw-semibold mb-0 fs-4">3.90</h6>
+                                </td>
+                                <td class="border-bottom-0">
+                                    <div class="d-flex align-items-center gap-2">
+                                        <span class="badge bg-primary rounded-3 fw-semibold">USD</span>
+                                    </div>
+                                </td>
+                                <td class="border-bottom-0">
+                                    <p class="mb-0 fw-semibold">19 Sep 2023</p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="border-bottom-0"><h6 class="fw-semibold mb-0">2</h6></td>
+                                <td class="border-bottom-0">
+                                    <h6 class="fw-semibold mb-1">Andrew McDownland</h6>
+                                </td>
+                                <td class="border-bottom-0">
+                                    <h6 class="fw-semibold mb-0 fs-4">1 000 000</h6>
+                                </td>
+                                <td class="border-bottom-0">
+                                    <div class="d-flex align-items-center gap-2">
+                                        <span class="badge bg-secondary rounded-3 fw-semibold">KHR</span>
+                                    </div>
+                                </td>
+                                <td class="border-bottom-0">
+                                    <p class="mb-0 fw-semibold">19 Sep 2023</p>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td class="border-bottom-0"><h6 class="fw-semibold mb-0">3</h6></td>
+                                <td class="border-bottom-0">
+                                    <h6 class="fw-semibold mb-1">Andrew McDownland</h6>
+                                </td>
+                                <td class="border-bottom-0">
+                                    <h6 class="fw-semibold mb-0 fs-4">1 000 000</h6>
+                                </td>
+                                <td class="border-bottom-0">
+                                    <div class="d-flex align-items-center gap-2">
+                                        <span class="badge bg-secondary rounded-3 fw-semibold">KHR</span>
+                                    </div>
+                                </td>
+                                <td class="border-bottom-0">
+                                    <p class="mb-0 fw-semibold">19 Sep 2023</p>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td class="border-bottom-0"><h6 class="fw-semibold mb-0">4</h6></td>
+                                <td class="border-bottom-0">
+                                    <h6 class="fw-semibold mb-1">Andrew McDownland</h6>
+                                </td>
+                                <td class="border-bottom-0">
+                                    <h6 class="fw-semibold mb-0 fs-4">1 000 000</h6>
+                                </td>
+                                <td class="border-bottom-0">
+                                    <div class="d-flex align-items-center gap-2">
+                                        <span class="badge bg-secondary rounded-3 fw-semibold">KHR</span>
+                                    </div>
+                                </td>
+                                <td class="border-bottom-0">
+                                    <p class="mb-0 fw-semibold">19 Sep 2023</p>
+                                </td>
+                            </tr>
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12 d-flex align-items-stretch">
+            <div class="card w-100">
+                <div class="card-body p-4">
+                    <h5 class="card-title fw-semibold mb-4">Report</h5>
+                    <div class="row mb-0">
+                        <div class="mb-4 col-xs-6 col-md-4 col-lg-4">
+                            <label class="form-label">From</label>
+                            <input id="fromDate" width="276"/>
+                        </div>
+                        <div class="mb-4 col-xs-6 col-md-4 col-lg-4">
+                            <label class="form-label">To</label>
+                            <input id="toDate" width="276"/>
+                        </div>
+                        <div class="mb-4 col-xs-12 col-md-4 col-lg-4" style="padding-top: 28px;">
+                            <button class="btn btn-primary" style="padding-top: 9px; padding-bottom: 9px;">Generate
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-xs-12 d-flex align-items-stretch">
+            <div class="card w-100 bg-light-info overflow-hidden shadow-none">
+                <div class="card-body position-relative">
+                    <div class="row">
+                        <div class="col-sm-7">
+                            <div class="d-flex align-items-center mb-7">
+                                <div class="rounded-circle overflow-hidden me-6">
+                                    <img src="/images/profile/user-1.jpg" alt="" width="40" height="40">
+                                </div>
+                                <h5 class="fw-semibold mb-0 fs-5">{userName}'s Report</h5>
+                            </div>
+                            <div class="d-flex align-items-center">
+                                <div class="border-end pe-4 border-muted border-opacity-10">
+                                    <h3 class="mb-1 fw-semibold fs-8 d-flex align-content-center">19 Sep 2023</h3>
+                                    <p class="mb-0 text-dark">Date of Maximum Expended</p>
+                                </div>
+                                <div class="ps-4">
+                                    <h3 class="mb-1 fw-semibold fs-8 d-flex align-content-center">Coke, Cake &
+                                        Ice-cream</h3>
+                                    <p class="mb-0 text-dark">Mostly Spent On</p>
+                                </div>
+                                <div class="ps-4">
+                                    <h3 class="mb-1 fw-semibold fs-8 d-flex align-content-center">10$</h3>
+                                    <p class="mb-0 text-dark">Average Price</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-5">
+                            <div class="welcome-bg-img mb-n7 text-end">
+                                <img src="/images/backgrounds/welcome-bg.svg" alt="" class="img-fluid">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+</body>
+</html>
