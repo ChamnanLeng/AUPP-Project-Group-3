@@ -15,22 +15,28 @@ import java.util.Optional;
 @Service
 public class UserImpl implements UserService {
     @Autowired
-    private UserRepository userRepo;
+    private UserRepository userRepository;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Autowired
+    public UserImpl(UserRepository userRepository, PasswordEncoder passwordEncoder){
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
+    }
     @Override
     public String registerUser(UserEntity userEntity) {
         UserEntity user = new UserEntity(
                 userEntity.getUserId(),
                 userEntity.getUserName(),
                 userEntity.getEmail(),
-                this.passwordEncoder.encode(userEntity.getPassword())
+                this.passwordEncoder.encode(userEntity.getPassword()),
+                userEntity.getVerify()
         );
-        UserEntity user1 = userRepo.findByEmail(userEntity.getEmail());
+        UserEntity user1 = userRepository.findByEmail(userEntity.getEmail());
         if (user1 == null){
-            userRepo.save(user);
+            userRepository.save(user);
             return user.getUserName();
         }else {
             return "User has been register!";
@@ -43,13 +49,13 @@ public class UserImpl implements UserService {
     @Override
     public LoginMesage loginUser(UserEntity userEntity) {
         String msg = "";
-        UserEntity user1 = userRepo.findByEmail(userEntity.getEmail());
+        UserEntity user1 = userRepository.findByEmail(userEntity.getEmail());
         if (user1 != null) {
             String password = userEntity.getPassword();
             String encodedPassword = user1.getPassword();
             Boolean isPwdRight = passwordEncoder.matches(password, encodedPassword);
             if (isPwdRight) {
-                Optional<UserEntity> user = userRepo.findOneByEmailAndPassword(userEntity.getEmail(), encodedPassword);
+                Optional<UserEntity> user = userRepository.findOneByEmailAndPassword(userEntity.getEmail(), encodedPassword);
                 if (user.isPresent()) {
                     return new LoginMesage("Login Success", true);
                 } else {
@@ -65,17 +71,20 @@ public class UserImpl implements UserService {
 
     @Override
     public UserEntity findById(Integer id) {
-        return userRepo.findById(id).get();
+        return userRepository.findById(id).get();
     }
     @Override
     public void delete(UserEntity user) {
-        userRepo.delete(user);
+        userRepository.delete(user);
     }
     @Override
-    public void save(UserEntity user) {
-        userRepo.save(user);
+    public void createUser(UserEntity userEntity) {
+        String textPassword = userEntity.getPassword();
+        String encodePassword = passwordEncoder.encode(textPassword);
+        userEntity.setPassword(encodePassword);
+        userRepository.save(userEntity);
     }
     @Override
-    public List< UserEntity > getAllUsersList() { return userRepo.findAll(); }
+    public List< UserEntity > getAllUsersList() { return userRepository.findAll(); }
 }
 

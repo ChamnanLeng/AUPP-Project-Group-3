@@ -24,11 +24,12 @@ public class UserEntity {
     private Boolean isVerify;
     public UserEntity(){}
 
-    public UserEntity(int userId, String userName, String email, String password) {
+    public UserEntity(int userId, String userName, String email, String password, Boolean isVerify) {
         this.userId = userId;
         this.userName = userName;
         this.email = email;
         this.password = password;
+        this.isVerify = isVerify;
     }
 
     public int getUserId() {
@@ -61,5 +62,13 @@ public class UserEntity {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public Boolean getVerify() {
+        return isVerify;
+    }
+
+    public void setVerify(Boolean verify) {
+        isVerify = verify;
     }
 }

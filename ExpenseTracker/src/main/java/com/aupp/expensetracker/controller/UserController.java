@@ -2,12 +2,17 @@ package com.aupp.expensetracker.controller;
 
 import com.aupp.expensetracker.Entity.UserEntity;
 import com.aupp.expensetracker.response.LoginMesage;
+import com.aupp.expensetracker.service.Impl.UserImpl;
 import com.aupp.expensetracker.service.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -15,11 +20,11 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-@RestController
+@Controller
 @RequestMapping("api/v1/user")
 public class UserController {
     @Autowired
-    private UserService userService;
+    private UserImpl userService;
 
     @Autowired
     private ModelMapper modelMapper;
@@ -49,13 +54,24 @@ public class UserController {
         }
     }
 
-    @PostMapping(path = "/save")
-    public String saveUser(@RequestBody UserEntity userEntity) {
-        String id = userService.registerUser(userEntity);
-        return id;
+    @GetMapping("/register")
+    public String showRegisterForm(Model model){
+        model.addAttribute("registerUser", new UserEntity());
+        return "registerPage";
     }
 
-    @PostMapping(path = "/login")
+    @PostMapping("/create")
+    public String createUser(@ModelAttribute("registerUser") @Validated UserEntity userEntity, BindingResult bindingResult, Model model) {
+        //String id = userService.registerUser(userEntity);
+        if (bindingResult.hasErrors()){
+            //model.addAttribute("registerUser", new UserEntity());
+            return "registerPage";
+        }
+        userService.createUser(userEntity);
+        return "redirect:/expenses/page";
+    }
+
+    @PostMapping("/login")
     public ResponseEntity<?> loginUser(@RequestBody UserEntity userEntity) {
         LoginMesage loginResponse = userService.loginUser(userEntity);
         return ResponseEntity.ok(loginResponse);
@@ -119,7 +135,7 @@ public class UserController {
                 user.setPassword(encodedPassword);
             }
 
-            userService.save(user);
+            userService.createUser(user);
             jsonResponseMap.put("status", 1);
             jsonResponseMap.put("data", userService.findById(id));
             return new ResponseEntity<>(jsonResponseMap, HttpStatus.OK);

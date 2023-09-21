@@ -12,5 +12,5 @@ public interface UserService {
     List < UserEntity > getAllUsersList();
     UserEntity findById(Integer id);
     void delete(UserEntity user);
-    void save(UserEntity user);
+    void createUser(UserEntity user);
 }
