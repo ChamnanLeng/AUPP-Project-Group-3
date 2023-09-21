@@ -19,6 +19,9 @@ public class UserEntity {
 
     @Column(name = "password")
     private String password;
+
+    @Column(name = "isVerify")
+    private Boolean isVerify;
     public UserEntity(){}
 
     public UserEntity(int userId, String userName, String email, String password) {
