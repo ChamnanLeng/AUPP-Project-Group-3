@@ -11,6 +11,9 @@ public interface UserService {
     LoginMesage loginUser(UserEntity userEntity);
     List < UserEntity > getAllUsersList();
     UserEntity findById(Integer id);
+    UserEntity findByEmail(String email);
     void delete(UserEntity user);
     void save(UserEntity user);
+    String forgotPassword(String email);
+    String resetPassword(String token, String password);
 }

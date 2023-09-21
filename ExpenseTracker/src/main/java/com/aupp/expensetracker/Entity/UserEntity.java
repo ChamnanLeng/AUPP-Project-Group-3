@@ -3,6 +3,8 @@ package com.aupp.expensetracker.Entity;
 
 import jakarta.persistence.*;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Table(name="user")
 public class UserEntity {
@@ -19,13 +21,22 @@ public class UserEntity {
 
     @Column(name = "password")
     private String password;
+
+    @Column(name = "token")
+    private String token;
+    @Column(columnDefinition = "TIMESTAMP")
+    private LocalDateTime tokenCreationDate;
+
+
     public UserEntity(){}
 
-    public UserEntity(int userId, String userName, String email, String password) {
+    public UserEntity(int userId, String userName, String email, String password, String token, LocalDateTime tokenCreationDate) {
         this.userId = userId;
         this.userName = userName;
         this.email = email;
         this.password = password;
+        this.token = token;
+        this.tokenCreationDate = tokenCreationDate;
     }
 
     public int getUserId() {
@@ -58,5 +69,20 @@ public class UserEntity {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
+
+    public LocalDateTime getTokenCreationDate() {
+        return tokenCreationDate;
+    }
+
+    public void setTokenCreationDate(LocalDateTime tokenCreationDate) {
+        this.tokenCreationDate = tokenCreationDate;
     }
 }
