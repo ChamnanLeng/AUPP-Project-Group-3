@@ -1,21 +1,26 @@
 package com.aupp.expensetracker.service.Impl;
 
 import com.aupp.expensetracker.Entity.UserEntity;
-import com.aupp.expensetracker.dto.LoginDTO;
-import com.aupp.expensetracker.dto.UserDTO;
 import com.aupp.expensetracker.repository.UserRepository;
 import com.aupp.expensetracker.response.LoginMesage;
 import com.aupp.expensetracker.service.UserService;
+import org.modelmapper.internal.bytebuddy.utility.RandomString;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 
 @Service
 public class UserImpl implements UserService {
+
+    private static final long EXPIRE_TOKEN_AFTER_MINUTES = 30;
+
     @Autowired
     private UserRepository userRepo;
 
@@ -23,30 +28,38 @@ public class UserImpl implements UserService {
     private PasswordEncoder passwordEncoder;
 
     @Override
-    public String registerUser(UserDTO userDTO) {
+    public String registerUser(UserEntity userEntity) {
         UserEntity user = new UserEntity(
-                userDTO.getUserId(),
-                userDTO.getUserName(),
-                userDTO.getEmail(),
-                this.passwordEncoder.encode(userDTO.getPassword())
+                userEntity.getUserId(),
+                userEntity.getUserName(),
+                userEntity.getEmail(),
+                this.passwordEncoder.encode(userEntity.getPassword()),
+                userEntity.getToken(),
+                userEntity.getTokenCreationDate()
         );
-        userRepo.save(user);
-        return user.getUserName();
+        UserEntity user1 = userRepo.findByEmail(userEntity.getEmail());
+        if (user1 == null){
+            userRepo.save(user);
+            return user.getUserName();
+        }else {
+            return "User has been register!";
+        }
+
     }
 
-    UserDTO userDTO;
+    UserEntity userEntity;
 
     @Override
-    public LoginMesage loginUser(LoginDTO loginDTO) {
+    public LoginMesage loginUser(UserEntity userEntity) {
         String msg = "";
-        UserEntity user1 = userRepo.findByEmail(loginDTO.getEmail());
+        UserEntity user1 = userRepo.findByEmail(userEntity.getEmail());
         if (user1 != null) {
-            String password = loginDTO.getPassword();
+            String password = userEntity.getPassword();
             String encodedPassword = user1.getPassword();
             Boolean isPwdRight = passwordEncoder.matches(password, encodedPassword);
             if (isPwdRight) {
-                Optional<UserEntity> employee = userRepo.findOneByEmailAndPassword(loginDTO.getEmail(), encodedPassword);
-                if (employee.isPresent()) {
+                Optional<UserEntity> user = userRepo.findOneByEmailAndPassword(userEntity.getEmail(), encodedPassword);
+                if (user.isPresent()) {
                     return new LoginMesage("Login Success", true);
                 } else {
                     return new LoginMesage("Login Failed", false);
@@ -63,6 +76,12 @@ public class UserImpl implements UserService {
     public UserEntity findById(Integer id) {
         return userRepo.findById(id).get();
     }
+
+    @Override
+    public UserEntity findByEmail(String email) {
+        return userRepo.findByEmail(email);
+    }
+
     @Override
     public void delete(UserEntity user) {
         userRepo.delete(user);
@@ -73,5 +92,59 @@ public class UserImpl implements UserService {
     }
     @Override
     public List< UserEntity > getAllUsersList() { return userRepo.findAll(); }
+
+    @Override
+    public String forgotPassword(String email) {
+        Optional<UserEntity> userOptional = Optional.ofNullable(userRepo.findByEmail(email));
+        if (!userOptional.isPresent()) {
+            return "Invalid email id.";
+        }
+
+        UserEntity user = userOptional.get();
+        user.setToken(generateToken());
+
+        user.setTokenCreationDate(LocalDateTime.now());
+
+        user = userRepo.save(user);
+
+        return user.getToken();
+    }
+
+    @Override
+    public String resetPassword(String token, String password) {
+        Optional<UserEntity> userOptional = Optional.ofNullable(userRepo.findByToken(token));
+        if (!userOptional.isPresent()) {
+            return "Invalid token.";
+        }
+
+        LocalDateTime tokenCreationDate = userOptional.get().getTokenCreationDate();
+
+        if (isTokenExpired(tokenCreationDate)) {
+            return "Token expired.";
+        }
+
+        UserEntity user = userOptional.get();
+
+        user.setPassword(password);
+        user.setToken(null);
+        user.setTokenCreationDate(null);
+
+        userRepo.save(user);
+
+        return "Your password has been successfully updated.";
+    }
+
+    private String generateToken() {
+//        StringBuilder token = new StringBuilder();
+//        return token.append(UUID.randomUUID().toString())
+//                .append(UUID.randomUUID().toString()).toString();
+        return RandomString.make(6);
+    }
+
+    private boolean isTokenExpired(final LocalDateTime tokenCreationDate) {
+        LocalDateTime now = LocalDateTime.now();
+        Duration diff = Duration.between(tokenCreationDate, now);
+        return diff.toMinutes() >= EXPIRE_TOKEN_AFTER_MINUTES;
+    }
 }
 
