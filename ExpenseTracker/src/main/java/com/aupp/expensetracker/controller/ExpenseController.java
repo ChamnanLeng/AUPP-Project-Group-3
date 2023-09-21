@@ -29,7 +29,7 @@ public class ExpenseController {
     @Autowired
     private CurrencyServiceImpl currencyService;
 
-    @GetMapping("/page")
+    @GetMapping("")
     public String showExpenseForm(Model model){
         model.addAttribute("expense", new ExpenseEntity());
         model.addAttribute("items", itemService.getAllItems());
@@ -39,7 +39,7 @@ public class ExpenseController {
         List<ExpenseEntity> expenseEntities = expenseService.getRecentExpenses(10);
         model.addAttribute("expenses", expenseEntities);
 
-        return "expensePage";
+        return "index";
     }
 
     @PostMapping("/create")
@@ -47,15 +47,10 @@ public class ExpenseController {
         if (bindingResult.hasErrors()){
             model.addAttribute("items", itemService.getAllItems());
             model.addAttribute("currencies", currencyService.getAllCurrencies());
-            return "expensePage";
+            return "index";
         }
         expenseService.createExpense(expenseEntity);
-        return "redirect:/expenses/page";
+        return "redirect:/expenses";
     }
-//    @GetMapping("/list")
-//    public String listExpense(Model model){
-//        List<ExpenseEntity> expenseEntities = expenseService.getAllWithUserItemCurrency();
-//        model.addAttribute("expenses", expenseEntities);
-//        return "expensePage";
-//    }
+
 }

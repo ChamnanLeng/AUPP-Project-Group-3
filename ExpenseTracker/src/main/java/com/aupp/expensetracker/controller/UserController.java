@@ -85,7 +85,7 @@ public class UserController {
     public String loginUser(@ModelAttribute("login_user") @Validated UserEntity userEntity) {
         LoginMesage loginResponse = userService.loginUser(userEntity);
         if (loginResponse.getStatus().equals(true)){
-            return "redirect:/expenses/page";
+            return "redirect:/expenses";
         }else {
             return "login";
         }

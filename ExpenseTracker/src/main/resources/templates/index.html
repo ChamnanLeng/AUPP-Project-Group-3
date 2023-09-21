@@ -1,4 +1,4 @@
-<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:th="http://www.thymeleaf.org"
       layout:decorate="~{layout.html}">
 
 <body>
@@ -7,40 +7,39 @@
     <div class="row">
         <div class="col-lg-12 d-flex align-items-stretch">
             <div class="card w-100">
+                <form th:action="@{/expenses/create}" method="post" th:object="${expense}">
                 <div class="card-body p-4">
                     <h5 class="card-title fw-semibold mb-4">Add Expense Item</h5>
                     <div class="row mb-0">
                         <div class="mb-4 col-xs-12 col-md-6 col-lg-3">
-                            <label class="form-label">Username</label>
-                            <select class="form-select" aria-label="Default select example">
-                                <option selected>Open this select menu</option>
-                                <option value="1">One</option>
-                                <option value="2">Two</option>
-                                <option value="3">Three</option>
+                            <label class="form-label" for="itemId">Item</label>
+                            <select class="form-select" aria-label="Default select example" id="itemId" name="itemId.itemId" required>
+<!--                                <option selected>Open this select menu</option>-->
+                                <option th:each="item : ${items}" th:value="${item.itemId}" th:text="${item.itemName}"></option>
                             </select>
                         </div>
                         <div class="mb-4 col-xs-8 col-md-6 col-lg-3">
-                            <label class="form-label">Amount</label>
-                            <input type="number" class="form-control">
+                            <label class="form-label" for="expenseAmount">Amount</label>
+                            <input type="number" class="form-control" id="expenseAmount" name="expenseAmount" required>
                         </div>
                         <div class="mb-4 col-xs-4 col-md-6 col-lg-3">
-                            <label class="form-label">Currency</label>
-                            <select class="form-select" aria-label="Default select example">
-                                <option selected>Open this select menu</option>
-                                <option value="1">One</option>
-                                <option value="2">Two</option>
-                                <option value="3">Three</option>
+                            <label class="form-label" for="currencyId">Currency</label>
+                            <select class="form-select" aria-label="Default select example" id="currencyId" name="currencyId.currencyId" required>
+<!--                                <option selected>Open this select Currency</option>-->
+                                <option th:each="currency : ${currencies}" th:value="${currency.currencyId}" th:text="${currency.currencyName}"></option>
                             </select>
                         </div>
                         <div class="mb-4 col-xs-12 col-md-6 col-lg-3">
-                            <label class="form-label">Select Date</label>
-                            <input id="date" width="276"/>
+                            <label class="form-label" for="expenseDate">Select Date</label>
+                            <input type="date" class="form-control" id="expenseDate"  name="expenseDate" required/>
                         </div>
                         <div class="mb-4 col-xs-12">
-                            <button class="btn btn-primary">Submit</button>
+                            <button class="btn btn-primary" >Submit</button>
                         </div>
+
                     </div>
                 </div>
+                </form>
             </div>
         </div>
     </div>
@@ -72,77 +71,21 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <tr>
-                                <td class="border-bottom-0"><h6 class="fw-semibold mb-0">1</h6></td>
+                            <tr th:each="expense:${expenses}">
+                                <td class="border-bottom-0" th:text="${expense.expTransactionId}"></td>
                                 <td class="border-bottom-0">
-                                    <h6 class="fw-semibold mb-1">Sunil Joshi</h6>
+                                    <span th:if="${expense.itemId != null}" th:text="${expense.itemId.itemName}"></span>
+                                    <span th:if="${expense.itemId == null}">N/A</span>
                                 </td>
-                                <td class="border-bottom-0">
-                                    <h6 class="fw-semibold mb-0 fs-4">3.90</h6>
-                                </td>
-                                <td class="border-bottom-0">
-                                    <div class="d-flex align-items-center gap-2">
-                                        <span class="badge bg-primary rounded-3 fw-semibold">USD</span>
-                                    </div>
-                                </td>
-                                <td class="border-bottom-0">
-                                    <p class="mb-0 fw-semibold">19 Sep 2023</p>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="border-bottom-0"><h6 class="fw-semibold mb-0">2</h6></td>
-                                <td class="border-bottom-0">
-                                    <h6 class="fw-semibold mb-1">Andrew McDownland</h6>
-                                </td>
-                                <td class="border-bottom-0">
-                                    <h6 class="fw-semibold mb-0 fs-4">1 000 000</h6>
-                                </td>
+                                <td class="border-bottom-0" th:text="${expense.expenseAmount}"></td>
                                 <td class="border-bottom-0">
                                     <div class="d-flex align-items-center gap-2">
-                                        <span class="badge bg-secondary rounded-3 fw-semibold">KHR</span>
+                                        <span class="badge bg-primary rounded-3 fw-semibold" th:if="${expense.currencyId != null}" th:text="${expense.currencyId.currencyName}"></span>
+                                        <span class="badge bg-primary rounded-3 fw-semibold" th:if="${expense.currencyId == null}">N/A</span>
                                     </div>
                                 </td>
-                                <td class="border-bottom-0">
-                                    <p class="mb-0 fw-semibold">19 Sep 2023</p>
-                                </td>
+                                <td class="border-bottom-0" th:text="${expense.expenseDate}"></td>
                             </tr>
-
-                            <tr>
-                                <td class="border-bottom-0"><h6 class="fw-semibold mb-0">3</h6></td>
-                                <td class="border-bottom-0">
-                                    <h6 class="fw-semibold mb-1">Andrew McDownland</h6>
-                                </td>
-                                <td class="border-bottom-0">
-                                    <h6 class="fw-semibold mb-0 fs-4">1 000 000</h6>
-                                </td>
-                                <td class="border-bottom-0">
-                                    <div class="d-flex align-items-center gap-2">
-                                        <span class="badge bg-secondary rounded-3 fw-semibold">KHR</span>
-                                    </div>
-                                </td>
-                                <td class="border-bottom-0">
-                                    <p class="mb-0 fw-semibold">19 Sep 2023</p>
-                                </td>
-                            </tr>
-
-                            <tr>
-                                <td class="border-bottom-0"><h6 class="fw-semibold mb-0">4</h6></td>
-                                <td class="border-bottom-0">
-                                    <h6 class="fw-semibold mb-1">Andrew McDownland</h6>
-                                </td>
-                                <td class="border-bottom-0">
-                                    <h6 class="fw-semibold mb-0 fs-4">1 000 000</h6>
-                                </td>
-                                <td class="border-bottom-0">
-                                    <div class="d-flex align-items-center gap-2">
-                                        <span class="badge bg-secondary rounded-3 fw-semibold">KHR</span>
-                                    </div>
-                                </td>
-                                <td class="border-bottom-0">
-                                    <p class="mb-0 fw-semibold">19 Sep 2023</p>
-                                </td>
-                            </tr>
-
                             </tbody>
                         </table>
                     </div>
