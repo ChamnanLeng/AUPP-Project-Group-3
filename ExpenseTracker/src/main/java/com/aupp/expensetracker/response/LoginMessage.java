@@ -3,7 +3,8 @@ package com.aupp.expensetracker.response;
 import lombok.Getter;
 
 @Getter
-public class LoginMesage {
+public class LoginMessage {
+    int userId;
     String message;
     Boolean status;
 
@@ -14,8 +15,10 @@ public class LoginMesage {
     public void setStatus(Boolean status) {
         this.status = status;
     }
+    public void setUserId(int userId){ this.userId = userId; }
 
-    public LoginMesage(String message, Boolean status) {
+    public LoginMessage(int userId, String message, Boolean status) {
+        this.userId = userId;
         this.message = message;
         this.status = status;
     }

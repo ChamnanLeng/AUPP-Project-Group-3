@@ -9,6 +9,7 @@
             <div class="card w-100">
                 <form th:action="@{/expenses/create}" method="post" th:object="${expense}">
                 <div class="card-body p-4">
+                    <h2 class="card-title fw-semibold mb-4" th:value="${userId}" th:text="'Hello, ' + ${userName} + '!'">Hello, User! </h2>
                     <h5 class="card-title fw-semibold mb-4">Add Expense Item</h5>
                     <div class="row mb-0">
                         <div class="mb-4 col-xs-12 col-md-6 col-lg-3">
@@ -54,7 +55,7 @@
                             <thead class="text-dark fs-4">
                             <tr>
                                 <th class="border-bottom-0">
-                                    <h6 class="fw-semibold mb-0">Id</h6>
+                                    <h6 class="fw-semibold mb-0">Expense ID</h6>
                                 </th>
                                 <th class="border-bottom-0">
                                     <h6 class="fw-semibold mb-0">Items</h6>

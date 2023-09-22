@@ -27,7 +27,6 @@ public class UserEntity {
     @Column(columnDefinition = "TIMESTAMP")
     private LocalDateTime tokenCreationDate;
 
-
     public UserEntity(){}
 
     public UserEntity(int userId, String userName, String email, String password, String token, LocalDateTime tokenCreationDate) {

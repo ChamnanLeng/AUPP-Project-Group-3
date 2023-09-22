@@ -2,7 +2,7 @@ package com.aupp.expensetracker.service.Impl;
 
 import com.aupp.expensetracker.Entity.UserEntity;
 import com.aupp.expensetracker.repository.UserRepository;
-import com.aupp.expensetracker.response.LoginMesage;
+import com.aupp.expensetracker.response.LoginMessage;
 import com.aupp.expensetracker.response.RegisterResponse;
 import com.aupp.expensetracker.service.UserService;
 import org.modelmapper.internal.bytebuddy.utility.RandomString;
@@ -55,25 +55,25 @@ public class UserImpl implements UserService {
     UserEntity userEntity;
 
     @Override
-    public LoginMesage loginUser(UserEntity userEntity) {
+    public LoginMessage loginUser(UserEntity userEntity) {
         String msg = "";
         UserEntity user1 = userRepository.findByEmail(userEntity.getEmail());
         if (user1 != null) {
             String password = userEntity.getPassword();
             String encodedPassword = user1.getPassword();
-            Boolean isPwdRight = passwordEncoder.matches(password, encodedPassword);
+            boolean isPwdRight = passwordEncoder.matches(password, encodedPassword);
             if (isPwdRight) {
                 Optional<UserEntity> user = userRepository.findOneByEmailAndPassword(userEntity.getEmail(), encodedPassword);
                 if (user.isPresent()) {
-                    return new LoginMesage("Login Success", true);
+                    return new LoginMessage(user1.getUserId(), "Login Success", true);
                 } else {
-                    return new LoginMesage("Login Failed", false);
+                    return new LoginMessage(user1.getUserId(),"Login Failed", false);
                 }
             } else {
-                return new LoginMesage("password Not Match", false);
+                return new LoginMessage(user1.getUserId(),"password Not Match", false);
             }
         }else {
-            return new LoginMesage("Email not exits", false);
+            return new LoginMessage(0,"Email not exits", false);
         }
     }
 
