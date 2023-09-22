@@ -3,6 +3,7 @@ package com.aupp.expensetracker.service.Impl;
 import com.aupp.expensetracker.Entity.UserEntity;
 import com.aupp.expensetracker.repository.UserRepository;
 import com.aupp.expensetracker.response.LoginMesage;
+import com.aupp.expensetracker.response.RegisterResponse;
 import com.aupp.expensetracker.service.UserService;
 import org.modelmapper.internal.bytebuddy.utility.RandomString;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -97,11 +98,15 @@ public class UserImpl implements UserService {
     }
 
     @Override
-    public void createUser(UserEntity userEntity) {
+    public RegisterResponse createUser(UserEntity userEntity) {
+        if (isEmailAlreadyInUse(userEntity.getEmail())){
+            return new RegisterResponse("Email is already in use.", false);
+        }
         String textPassword = userEntity.getPassword();
         String encodePassword = passwordEncoder.encode(textPassword);
         userEntity.setPassword(encodePassword);
         userRepository.save(userEntity);
+        return new RegisterResponse("Success Register", true);
     }
     @Override
     public List< UserEntity > getAllUsersList() { return userRepository.findAll(); }
@@ -158,6 +163,11 @@ public class UserImpl implements UserService {
         LocalDateTime now = LocalDateTime.now();
         Duration diff = Duration.between(tokenCreationDate, now);
         return diff.toMinutes() >= EXPIRE_TOKEN_AFTER_MINUTES;
+    }
+
+    private boolean isEmailAlreadyInUse(String email){
+        UserEntity existingUser = userRepository.findByEmail(email);
+        return existingUser != null;
     }
 }
 

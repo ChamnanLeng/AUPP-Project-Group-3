@@ -2,12 +2,11 @@ package com.aupp.expensetracker.controller;
 
 import com.aupp.expensetracker.Entity.UserEntity;
 import com.aupp.expensetracker.response.LoginMesage;
+import com.aupp.expensetracker.response.RegisterResponse;
 import com.aupp.expensetracker.service.EmailService;
 import com.aupp.expensetracker.service.Impl.UserImpl;
-import com.aupp.expensetracker.service.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -67,12 +66,14 @@ public class UserController {
     }
 
     @PostMapping("/create")
-    public String createUser(@ModelAttribute("registration") @Validated UserEntity userEntity, BindingResult bindingResult, Model model) {
-        if (bindingResult.hasErrors()){
-            return "register";
-        }
-        userService.createUser(userEntity);
-        return "redirect:/expenses/page";
+    public String createUser(@ModelAttribute("registration") @Validated UserEntity userEntity) {
+        RegisterResponse registerResponse = userService.createUser(userEntity);
+            if (registerResponse.getStatus().equals(true)){
+                return "redirect:/login";
+            }
+            else {
+                return "register";
+            }
     }
 
     @GetMapping("/login_user")

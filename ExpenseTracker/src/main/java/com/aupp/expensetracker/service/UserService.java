@@ -2,6 +2,7 @@ package com.aupp.expensetracker.service;
 
 import com.aupp.expensetracker.Entity.UserEntity;
 import com.aupp.expensetracker.response.LoginMesage;
+import com.aupp.expensetracker.response.RegisterResponse;
 
 import java.util.List;
 
@@ -16,5 +17,5 @@ public interface UserService {
     void saveUser(UserEntity user);
     String forgotPassword(String email);
     String resetPassword(String token, String password);
-    void createUser(UserEntity user);
+    RegisterResponse createUser(UserEntity user);
 }

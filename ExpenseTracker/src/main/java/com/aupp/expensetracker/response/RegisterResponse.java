@@ -3,7 +3,7 @@ package com.aupp.expensetracker.response;
 import lombok.Getter;
 
 @Getter
-public class LoginMesage {
+public class RegisterResponse {
     String message;
     Boolean status;
 
@@ -15,7 +15,7 @@ public class LoginMesage {
         this.status = status;
     }
 
-    public LoginMesage(String message, Boolean status) {
+    public RegisterResponse(String message, Boolean status) {
         this.message = message;
         this.status = status;
     }
