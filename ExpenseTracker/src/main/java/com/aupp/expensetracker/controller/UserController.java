@@ -1,10 +1,11 @@
 package com.aupp.expensetracker.controller;
 
 import com.aupp.expensetracker.Entity.UserEntity;
-import com.aupp.expensetracker.response.LoginMesage;
+import com.aupp.expensetracker.response.LoginMessage;
 import com.aupp.expensetracker.response.RegisterResponse;
 import com.aupp.expensetracker.service.EmailService;
 import com.aupp.expensetracker.service.Impl.UserImpl;
+import jakarta.servlet.http.HttpSession;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -12,7 +13,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -83,9 +83,10 @@ public class UserController {
     }
 
     @PostMapping("/login_page")
-    public String loginUser(@ModelAttribute("login_user") @Validated UserEntity userEntity) {
-        LoginMesage loginResponse = userService.loginUser(userEntity);
+    public String loginUser(@ModelAttribute("login_user") @Validated UserEntity userEntity, HttpSession session) {
+        LoginMessage loginResponse = userService.loginUser(userEntity);
         if (loginResponse.getStatus().equals(true)){
+            session.setAttribute("userId", loginResponse.getUserId());
             return "redirect:/expenses";
         }else {
             return "login";

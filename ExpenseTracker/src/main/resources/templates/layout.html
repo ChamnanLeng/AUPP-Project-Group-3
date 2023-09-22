@@ -7,7 +7,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Expense Tracker</title>
-    <link rel="shortcut icon" type="image/png" href="/images/logos/favicon.png"/>
+    <link rel="icon" type="image/png" href="/images/logos/icon.png"/>
     <link rel="stylesheet" href="/css/styles.min.css"/>
     <script src="/libs/jquery/dist/jquery.min.js"></script>
     <link rel="stylesheet" href="/css/icons/tabler-icons/tabler-icons.css">
@@ -49,11 +49,7 @@
                                         <i class="ti ti-mail fs-6"></i>
                                         <p class="mb-0 fs-3">My Account</p>
                                     </a>
-                                    <a href="javascript:void(0)" class="d-flex align-items-center gap-2 dropdown-item">
-                                        <i class="ti ti-list-check fs-6"></i>
-                                        <p class="mb-0 fs-3">My Task</p>
-                                    </a>
-                                    <a href="./authentication-login.html"
+                                    <a th:href="@{/login}"
                                        class="btn btn-outline-primary mx-3 mt-2 d-block">Logout</a>
                                 </div>
                             </div>
