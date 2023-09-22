@@ -32,25 +32,6 @@ public class UserImpl implements UserService {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
     }
-    @Override
-    public String registerUser(UserEntity userEntity) {
-        UserEntity user = new UserEntity(
-                userEntity.getUserId(),
-                userEntity.getUserName(),
-                userEntity.getEmail(),
-                this.passwordEncoder.encode(userEntity.getPassword()),
-                userEntity.getToken(),
-                userEntity.getTokenCreationDate()
-        );
-        UserEntity user1 = userRepository.findByEmail(userEntity.getEmail());
-        if (user1 == null){
-            userRepository.save(user);
-            return user.getUserName();
-        }else {
-            return "User has been register!";
-        }
-
-    }
 
     UserEntity userEntity;
 
@@ -99,14 +80,15 @@ public class UserImpl implements UserService {
 
     @Override
     public RegisterResponse createUser(UserEntity userEntity) {
-        if (isEmailAlreadyInUse(userEntity.getEmail())){
-            return new RegisterResponse("Email is already in use.", false);
-        }
         String textPassword = userEntity.getPassword();
         String encodePassword = passwordEncoder.encode(textPassword);
         userEntity.setPassword(encodePassword);
-        userRepository.save(userEntity);
-        return new RegisterResponse("Success Register", true);
+        if (isEmailAlreadyInUse(userEntity.getEmail())){
+            return new RegisterResponse("Email is already in use.", false);
+        }else {
+            userRepository.save(userEntity);
+            return new RegisterResponse("Success Register", true);
+        }
     }
     @Override
     public List< UserEntity > getAllUsersList() { return userRepository.findAll(); }

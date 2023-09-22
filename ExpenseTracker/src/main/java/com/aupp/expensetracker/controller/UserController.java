@@ -86,7 +86,6 @@ public class UserController {
     public String loginUser(@ModelAttribute("login_user") @Validated UserEntity userEntity, HttpSession session) {
         LoginMessage loginResponse = userService.loginUser(userEntity);
         if (loginResponse.getStatus().equals(true)){
-            //int userId = getUserIdFromLoginResponse(loginResponse);
             session.setAttribute("userId", loginResponse.getUserId());
             return "redirect:/expenses";
         }else {

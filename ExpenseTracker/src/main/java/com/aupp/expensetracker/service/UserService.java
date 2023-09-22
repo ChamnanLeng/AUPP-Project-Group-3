@@ -8,7 +8,6 @@ import java.util.List;
 
 
 public interface UserService {
-    String registerUser(UserEntity userEntity);
     LoginMessage loginUser(UserEntity userEntity);
     List < UserEntity > getAllUsersList();
     UserEntity findById(Integer id);
