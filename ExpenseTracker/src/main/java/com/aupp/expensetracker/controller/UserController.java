@@ -162,20 +162,9 @@ public class UserController {
         }
     }
 
-//    @PostMapping("/forgot-password")
-//    public String forgotPassword(@RequestParam String email) {
-//
-//        String response = userService.forgotPassword(email);
-//
-////        if (!response.startsWith("Invalid")) {
-////            response = "http://localhost:8080/user/reset-password?token=" + response;
-////        }
-//
-//        return response;
-//    }
-
     @PatchMapping("/forgot-password")
     public ResponseEntity<?> forgotPassword(@RequestParam String email) {
+        Map<String, Object> jsonResponseMap = new LinkedHashMap<>();
         String token = userService.forgotPassword(email);
         try{
             UserEntity user = userService.findByEmail(email);
@@ -193,16 +182,10 @@ public class UserController {
                         + "or you have not made the request.</p>"  ;
                 System.out.println("Here is the reset passwrod likm"+ resetPasswordLink);
                 emailService.sendByMail(email,resetPasswordLink);
-
-
             }
-
-
-
-
         }catch (Exception e)
         {
-//            return new ResponseEntity<>(new ErrorResponse(406, CustomMessage.USER_NOT_FOUND, requestTime, errors), HttpStatus.BAD_REQUEST);
+            new ResponseEntity<>(jsonResponseMap, HttpStatus.NOT_FOUND);
         }
 
         return new ResponseEntity<>(null, HttpStatus.OK);
