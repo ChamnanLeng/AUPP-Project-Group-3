@@ -15,7 +15,6 @@
                         <div class="mb-4 col-xs-12 col-md-6 col-lg-3">
                             <label class="form-label" for="itemId">Item</label>
                             <select class="form-select" aria-label="Default select example" id="itemId" name="itemId.itemId" required>
-<!--                                <option selected>Open this select menu</option>-->
                                 <option th:each="item : ${items}" th:value="${item.itemId}" th:text="${item.itemName}"></option>
                             </select>
                         </div>
@@ -26,7 +25,6 @@
                         <div class="mb-4 col-xs-4 col-md-6 col-lg-3">
                             <label class="form-label" for="currencyId">Currency</label>
                             <select class="form-select" aria-label="Default select example" id="currencyId" name="currencyId.currencyId" required>
-<!--                                <option selected>Open this select Currency</option>-->
                                 <option th:each="currency : ${currencies}" th:value="${currency.currencyId}" th:text="${currency.currencyName}"></option>
                             </select>
                         </div>
@@ -101,17 +99,16 @@
                 <div class="card-body p-4">
                     <h5 class="card-title fw-semibold mb-4">Report</h5>
                     <div class="row mb-0">
-                        <div class="mb-4 col-xs-6 col-md-4 col-lg-4">
+                        <div class="mb-4 col-xs-12 col-md-6 col-lg-3">
                             <label class="form-label" for="fromDate">From</label>
-                            <input type="date" id="fromDate" name="fromDate" width="276"/>
+                            <input type="date" class="form-control" id="fromDate"  name="fromDate" th:value="${fromDate}" required/>
                         </div>
-                        <div class="mb-4 col-xs-6 col-md-4 col-lg-4">
+                        <div class="mb-4 col-xs-12 col-md-6 col-lg-3">
                             <label class="form-label" for="toDate">To</label>
-                            <input type="date" id="toDate" name="toDate" width="276"/>
+                            <input type="date" class="form-control" id="toDate"  name="toDate" th:value="${toDate}" required/>
                         </div>
                         <div class="mb-4 col-xs-12 col-md-4 col-lg-4" style="padding-top: 28px;">
-                            <button class="btn btn-primary" style="padding-top: 9px; padding-bottom: 9px;">Generate
-                            </button>
+                            <button class="btn btn-primary" style="padding-top: 9px; padding-bottom: 9px;">Generate</button>
                         </div>
                     </div>
                 </div>
@@ -133,17 +130,21 @@
                             </div>
                             <div class="d-flex align-items-center">
                                 <div class="border-end pe-4 border-muted border-opacity-10">
-                                    <h3 class="mb-1 fw-semibold fs-8 d-flex align-content-center">19 Sep 2023</h3>
-                                    <p class="mb-0 text-dark">Date of Maximum Expended</p>
+                                    <h3 class="mb-1 fw-semibold fs-8 d-flex align-content-center" th:if="${dateWithMostExpenses != null}" th:text="${#temporals.format(dateWithMostExpenses, 'dd MMM yyyy')}"></h3>
+                                    <p class="mb-0 text-dark" th:if="${dateWithMostExpenses != null}">Date of Maximum Expended</p>
+                                    <p class="mb-0 text-dark" th:if="${dateWithMostExpenses == null}">No expenses found</p>
+                                </div>
+
+                                <div class="ps-4">
+                                    <h5 class="mb-1 fw-semibold fs-8 d-flex align-content-center"
+                                        th:if="${top3ItemWithMostExpenses != null}" th:each="item : ${top3ItemWithMostExpenses}" th:text="${item.itemName} + ', '"></h5>
+                                    <p class="mb-0 text-dark" th:if="${top3ItemWithMostExpenses != null}">Top 3 Items Mostly Spent On </p>
+                                    <p class="mb-0 text-dark" th:if="${top3ItemWithMostExpenses == null}">N/A Mostly Spent On</p>
                                 </div>
                                 <div class="ps-4">
-                                    <h3 class="mb-1 fw-semibold fs-8 d-flex align-content-center">Coke, Cake &
-                                        Ice-cream</h3>
-                                    <p class="mb-0 text-dark">Mostly Spent On</p>
-                                </div>
-                                <div class="ps-4">
-                                    <h3 class="mb-1 fw-semibold fs-8 d-flex align-content-center">10$</h3>
-                                    <p class="mb-0 text-dark">Average Price</p>
+                                    <h3 class="mb-1 fw-semibold fs-8 d-flex align-content-center" th:if="${averageExpenseByUSD != null}" th:text="${averageExpenseByUSD} + ' USD'"></h3>
+                                    <p class="mb-0 text-dark" th:if="${averageExpenseByUSD != null}">Average Spending</p>
+                                    <p class="mb-0 text-dark" th:if="${averageExpenseByUSD == null}">N/A Spending</p>
                                 </div>
                             </div>
                         </div>
@@ -157,7 +158,6 @@
             </div>
         </div>
     </div>
-
 </div>
 </body>
 </html>

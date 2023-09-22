@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @EnableJpaRepositories
@@ -20,4 +21,5 @@ public interface ExpenseRepository extends JpaRepository<ExpenseEntity, Integer>
     @Query("SELECT ee FROM ExpenseEntity ee WHERE ee.userId = :user ORDER BY ee.expTransactionId DESC")
     List<ExpenseEntity> findTopNByUserOrderByExpTransactionIdDesc(@Param("user") UserEntity user, Pageable pageable);
 
+    List<ExpenseEntity> findByUserIdAndExpenseDateBetween(UserEntity userId, String fromDate, String toDate);
 }
