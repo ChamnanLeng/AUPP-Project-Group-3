@@ -1,5 +1,5 @@
 <html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:th="http://www.thymeleaf.org"
-      layout:decorate="~{layout.html}">
+      layout:decorate="~{layout.html}" lang="en">
 
 <body>
 <div layout:fragment="content" class="container-fluid">
@@ -99,17 +99,17 @@
                 <div class="card-body p-4">
                     <h5 class="card-title fw-semibold mb-4">Report</h5>
                     <div class="row mb-0">
-                        <div class="mb-4 col-xs-12 col-md-6 col-lg-3">
-                            <label class="form-label" for="fromDate">From</label>
-                            <input type="date" class="form-control" id="fromDate"  name="fromDate" th:value="${fromDate}" required/>
-                        </div>
-                        <div class="mb-4 col-xs-12 col-md-6 col-lg-3">
-                            <label class="form-label" for="toDate">To</label>
-                            <input type="date" class="form-control" id="toDate"  name="toDate" th:value="${toDate}" required/>
-                        </div>
-                        <div class="mb-4 col-xs-12 col-md-4 col-lg-4" style="padding-top: 28px;">
-                            <button class="btn btn-primary" style="padding-top: 9px; padding-bottom: 9px;">Generate</button>
-                        </div>
+                            <div class="mb-4 col-xs-12 col-md-6 col-lg-3">
+                                <label class="form-label" for="fromDate">From</label>
+                                <input type="date" class="form-control" id="fromDate" name="fromDate" th:value="${fromDate}" required />
+                            </div>
+                            <div class="mb-4 col-xs-12 col-md-6 col-lg-3">
+                                <label class="form-label" for="toDate">To</label>
+                                <input type="date" class="form-control" id="toDate" name="toDate" th:value="${toDate}" required />
+                            </div>
+                            <div class="mb-4 col-xs-12 col-md-4 col-lg-4" style="padding-top: 28px;">
+                                <button id="generateButton" type="submit" class="btn btn-primary" style="padding-top: 9px; padding-bottom: 9px;">Generate</button>
+                            </div>
                     </div>
                 </div>
             </div>
@@ -159,5 +159,40 @@
         </div>
     </div>
 </div>
+<script>
+    const generateButton = document.getElementById("generateButton");
+    generateButton.addEventListener("click", function() {
+        const fromDateInput = document.getElementById("fromDate");
+        const toDateInput = document.getElementById("toDate");
+        const newFromDate = fromDateInput.value;
+        const newToDate = toDateInput.value;
+
+        // Perform validation if needed
+
+        // Create a JSON object with the new dates
+        const dateRange = {
+            fromDate: newFromDate,
+            toDate: newToDate
+        };
+
+        // Send the JSON object to the server using an AJAX request
+        fetch('/expenses/generateReport', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(dateRange)
+        }).then(function(response) {
+            // Handle the response if needed
+            if (response.ok) {
+                // Reload the page to apply the new date range
+                window.location.reload();
+            } else {
+                // Handle any errors or display a message to the user
+                console.error('Failed to update date range');
+            }
+        });
+    });
+</script>
 </body>
 </html>

@@ -21,6 +21,14 @@ public class PageController {
     public String registerPage() {
         return "register";
     }
+
+    @RequestMapping("/login_admin")
+    public String adminLoginPage(){return "login_admin";}
+
+    @RequestMapping("/register_admin")
+    public String adminRegisterPage() {
+        return "register_admin";
+    }
     
 }
 
