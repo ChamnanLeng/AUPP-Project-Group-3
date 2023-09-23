@@ -1,6 +1,7 @@
 package com.aupp.expensetracker.controller;
 
 import com.aupp.expensetracker.Entity.ExpenseEntity;
+import com.aupp.expensetracker.Entity.ItemEntity;
 import com.aupp.expensetracker.Entity.UserEntity;
 import com.aupp.expensetracker.service.Impl.CurrencyServiceImpl;
 import com.aupp.expensetracker.service.Impl.ExpenseServiceImpl;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Controller
@@ -45,6 +47,7 @@ public class ExpenseController {
         }
         model.addAttribute("expense", new ExpenseEntity());
         model.addAttribute("userName", user.getUserName());
+        model.addAttribute("userEmail", user.getEmail());
         model.addAttribute("userId", userId);
         model.addAttribute("items", itemService.getAllItems());
         model.addAttribute("currencies", currencyService.getAllCurrencies());
@@ -52,6 +55,27 @@ public class ExpenseController {
         //List all expense item showing to the list
         List<ExpenseEntity> expenseEntities = expenseService.getRecentExpenses(user, 10);
         model.addAttribute("expenses", expenseEntities);
+
+        // Set default date values (7 days ago and today)
+        LocalDate currentDate = LocalDate.now();
+        LocalDate passDate = currentDate.minusDays(7);
+
+        // Format the dates as yyyy-MM-dd
+        String formattedCurrentDate = currentDate.toString();
+        String formattedDaysAgo = passDate.toString();
+        // Add default date values to the model
+        model.addAttribute("fromDate", formattedDaysAgo);
+        model.addAttribute("toDate", formattedCurrentDate);
+
+        LocalDate dateWithMostExpense = expenseService.findDateWithMostExpenses(user, formattedDaysAgo, formattedCurrentDate);
+        model.addAttribute("dateWithMostExpenses", dateWithMostExpense);
+
+        List<ItemEntity> topItems = expenseService.findTop3ItemsByDateRange(user, formattedDaysAgo, formattedCurrentDate);
+        model.addAttribute("top3ItemWithMostExpenses", topItems);
+
+        double averageExpense = expenseService.calculateAverageSpendingByDateRange(user, formattedDaysAgo, formattedCurrentDate);
+        model.addAttribute("averageExpenseByUSD", averageExpense);
+
         return "index";
     }
 
@@ -82,7 +106,7 @@ public class ExpenseController {
         return "redirect:/expenses";
     }
 
-    
+
 
 
 }

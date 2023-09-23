@@ -2,6 +2,8 @@ package com.aupp.expensetracker.Entity;
 
 import jakarta.persistence.*;
 
+import java.time.LocalDate;
+
 @Entity
 @Table(name = "expenseTransaction")
 public class ExpenseEntity {
