@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
 import java.util.List;
 
+
 @Controller
 @RequestMapping("/expenses")
 public class ExpenseController {
@@ -32,7 +33,9 @@ public class ExpenseController {
     private CurrencyServiceImpl currencyService;
 
     @GetMapping("")
-    public String showExpenseForm(HttpSession httpSession, Model model){
+    public String showExpenseForm(HttpSession httpSession, Model model,
+                                  @RequestParam(name = "fromDate", required = false) String fromDate,
+                                  @RequestParam(name = "toDate", required = false) String toDate){
         Integer userId = (Integer) httpSession.getAttribute("userId");
         if (userId == null) {
             // Redirect to log in if user is not authenticated
@@ -54,10 +57,6 @@ public class ExpenseController {
         List<ExpenseEntity> expenseEntities = expenseService.getRecentExpenses(user, 10);
         model.addAttribute("expenses", expenseEntities);
 
-        // Check if fromDate and toDate are already set in the model (from a previous form submission)
-        String fromDate = (String) model.getAttribute("fromDate");
-        String toDate = (String) model.getAttribute("toDate");
-
         if (fromDate == null || toDate == null) {
             // If fromDate and toDate are not set, initialize them with default values
             LocalDate currentDate = LocalDate.now();
@@ -67,6 +66,9 @@ public class ExpenseController {
             fromDate = passDate.toString();
             toDate = currentDate.toString();
 
+            model.addAttribute("fromDate", fromDate);
+            model.addAttribute("toDate", toDate);
+        }else {
             model.addAttribute("fromDate", fromDate);
             model.addAttribute("toDate", toDate);
         }
@@ -107,18 +109,6 @@ public class ExpenseController {
         }
         expenseEntity.setUserId(user);
         expenseService.createExpense(expenseEntity);
-        return "redirect:/expenses";
-    }
-
-    @PostMapping("/generateReport")
-    public String generateReport(@RequestBody DateRange dateRange, Model model) {
-        // Validate and process the new date range here
-
-        // Update the model attributes with the new date values
-        model.addAttribute("fromDate", dateRange.getFromDate());
-        model.addAttribute("toDate", dateRange.getToDate());
-
-        // Return a response if needed (e.g., success message)
         return "redirect:/expenses";
     }
 
