@@ -20,7 +20,7 @@
                         </div>
                         <div class="mb-4 col-xs-8 col-md-6 col-lg-3">
                             <label class="form-label" for="expenseAmount">Amount</label>
-                            <input type="number" class="form-control" id="expenseAmount" name="expenseAmount" required>
+                            <input type="text" class="form-control" id="expenseAmount" name="expenseAmount" required pattern="[0-9]+(\.[0-9]+)?" title="Enter a valid number">
                         </div>
                         <div class="mb-4 col-xs-4 col-md-6 col-lg-3">
                             <label class="form-label" for="currencyId">Currency</label>
@@ -142,7 +142,8 @@
                                     <p class="mb-0 text-dark" th:if="${top3ItemWithMostExpenses == null}">N/A Mostly Spent On</p>
                                 </div>
                                 <div class="ps-4">
-                                    <h3 class="mb-1 fw-semibold fs-8 d-flex align-content-center" th:if="${averageExpenseByUSD != null}" th:text="${averageExpenseByUSD} + ' USD'"></h3>
+                                    <h3 class="mb-1 fw-semibold fs-8 d-flex align-content-center" th:if="${averageExpenseByUSD != null}"
+                                        th:text="${#numbers.formatDecimal(averageExpenseByUSD, 0, 'COMMA', 2, 'POINT')} + ' USD'"></h3>
                                     <p class="mb-0 text-dark" th:if="${averageExpenseByUSD != null}">Average Spending</p>
                                     <p class="mb-0 text-dark" th:if="${averageExpenseByUSD == null}">N/A Spending</p>
                                 </div>
