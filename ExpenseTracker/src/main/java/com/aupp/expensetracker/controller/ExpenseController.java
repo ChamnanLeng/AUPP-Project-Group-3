@@ -47,6 +47,7 @@ public class ExpenseController {
         }
         model.addAttribute("expense", new ExpenseEntity());
         model.addAttribute("userName", user.getUserName());
+        model.addAttribute("userEmail", user.getEmail());
         model.addAttribute("userId", userId);
         model.addAttribute("items", itemService.getAllItems());
         model.addAttribute("currencies", currencyService.getAllCurrencies());

@@ -21,10 +21,6 @@ public class PageController {
     public String registerPage() {
         return "register";
     }
-
-    @RequestMapping("/expenses")
-    public String expensePage(){
-        return "index";
-    }
+    
 }
 
