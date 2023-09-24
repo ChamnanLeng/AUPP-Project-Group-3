@@ -20,7 +20,7 @@
                         </div>
                         <div class="mb-4 col-xs-8 col-md-6 col-lg-3">
                             <label class="form-label" for="expenseAmount">Amount</label>
-                            <input type="number" class="form-control" id="expenseAmount" name="expenseAmount" required>
+                            <input type="text" class="form-control" id="expenseAmount" name="expenseAmount" required pattern="[0-9]+(\.[0-9]+)?" title="Enter a valid number">
                         </div>
                         <div class="mb-4 col-xs-4 col-md-6 col-lg-3">
                             <label class="form-label" for="currencyId">Currency</label>
@@ -53,7 +53,7 @@
                             <thead class="text-dark fs-4">
                             <tr>
                                 <th class="border-bottom-0">
-                                    <h6 class="fw-semibold mb-0">Expense ID</h6>
+                                    <h6 class="fw-semibold mb-0">No.</h6>
                                 </th>
                                 <th class="border-bottom-0">
                                     <h6 class="fw-semibold mb-0">Items</h6>
@@ -70,8 +70,8 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <tr th:each="expense:${expenses}">
-                                <td class="border-bottom-0" th:text="${expense.expTransactionId}"></td>
+                            <tr th:each="expense, stat:${expenses}">
+                                <td class="border-bottom-0" th:text="${stat.index + 1}"></td>
                                 <td class="border-bottom-0">
                                     <span th:if="${expense.itemId != null}" th:text="${expense.itemId.itemName}"></span>
                                     <span th:if="${expense.itemId == null}">N/A</span>
@@ -98,7 +98,8 @@
             <div class="card w-100">
                 <div class="card-body p-4">
                     <h5 class="card-title fw-semibold mb-4">Report</h5>
-                    <div class="row mb-0">
+                    <form th:action="@{/expenses}" method="get">
+                        <div class="row mb-0">
                             <div class="mb-4 col-xs-12 col-md-6 col-lg-3">
                                 <label class="form-label" for="fromDate">From</label>
                                 <input type="date" class="form-control" id="fromDate" name="fromDate" th:value="${fromDate}" required />
@@ -107,10 +108,11 @@
                                 <label class="form-label" for="toDate">To</label>
                                 <input type="date" class="form-control" id="toDate" name="toDate" th:value="${toDate}" required />
                             </div>
-                            <div class="mb-4 col-xs-12 col-md-4 col-lg-4" style="padding-top: 28px;">
-                                <button id="generateButton" type="submit" class="btn btn-primary" style="padding-top: 9px; padding-bottom: 9px;">Generate</button>
+                            <div class="mb-4 col-xs-12">
+                                <button type="submit" class="btn btn-primary" style="padding-top: 9px; padding-bottom: 9px;">Generate</button>
                             </div>
-                    </div>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
@@ -142,7 +144,8 @@
                                     <p class="mb-0 text-dark" th:if="${top3ItemWithMostExpenses == null}">N/A Mostly Spent On</p>
                                 </div>
                                 <div class="ps-4">
-                                    <h3 class="mb-1 fw-semibold fs-8 d-flex align-content-center" th:if="${averageExpenseByUSD != null}" th:text="${averageExpenseByUSD} + ' USD'"></h3>
+                                    <h3 class="mb-1 fw-semibold fs-8 d-flex align-content-center" th:if="${averageExpenseByUSD != null}"
+                                        th:text="${#numbers.formatDecimal(averageExpenseByUSD, 0, 'COMMA', 2, 'POINT')} + ' USD'"></h3>
                                     <p class="mb-0 text-dark" th:if="${averageExpenseByUSD != null}">Average Spending</p>
                                     <p class="mb-0 text-dark" th:if="${averageExpenseByUSD == null}">N/A Spending</p>
                                 </div>
@@ -159,40 +162,5 @@
         </div>
     </div>
 </div>
-<script>
-    const generateButton = document.getElementById("generateButton");
-    generateButton.addEventListener("click", function() {
-        const fromDateInput = document.getElementById("fromDate");
-        const toDateInput = document.getElementById("toDate");
-        const newFromDate = fromDateInput.value;
-        const newToDate = toDateInput.value;
-
-        // Perform validation if needed
-
-        // Create a JSON object with the new dates
-        const dateRange = {
-            fromDate: newFromDate,
-            toDate: newToDate
-        };
-
-        // Send the JSON object to the server using an AJAX request
-        fetch('/expenses/generateReport', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(dateRange)
-        }).then(function(response) {
-            // Handle the response if needed
-            if (response.ok) {
-                // Reload the page to apply the new date range
-                window.location.reload();
-            } else {
-                // Handle any errors or display a message to the user
-                console.error('Failed to update date range');
-            }
-        });
-    });
-</script>
 </body>
 </html>
