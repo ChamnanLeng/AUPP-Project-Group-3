@@ -13,13 +13,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.List;
+
 
 @Controller
 @RequestMapping("/expenses")
@@ -34,10 +32,12 @@ public class ExpenseController {
     private CurrencyServiceImpl currencyService;
 
     @GetMapping("")
-    public String showExpenseForm(HttpSession httpSession, Model model){
+    public String showExpenseForm(HttpSession httpSession, Model model,
+                                  @RequestParam(name = "fromDate", required = false) String fromDate,
+                                  @RequestParam(name = "toDate", required = false) String toDate){
         Integer userId = (Integer) httpSession.getAttribute("userId");
         if (userId == null) {
-            // Redirect to login if user is not authenticated
+            // Redirect to log in if user is not authenticated
             return "redirect:/login";
         }
         UserEntity user = userService.findById(userId);
@@ -56,24 +56,29 @@ public class ExpenseController {
         List<ExpenseEntity> expenseEntities = expenseService.getRecentExpenses(user, 10);
         model.addAttribute("expenses", expenseEntities);
 
-        // Set default date values (7 days ago and today)
-        LocalDate currentDate = LocalDate.now();
-        LocalDate passDate = currentDate.minusDays(7);
+        if (fromDate == null || toDate == null) {
+            // If fromDate and toDate are not set, initialize them with default values
+            LocalDate currentDate = LocalDate.now();
+            LocalDate passDate = currentDate.minusDays(7);
 
-        // Format the dates as yyyy-MM-dd
-        String formattedCurrentDate = currentDate.toString();
-        String formattedDaysAgo = passDate.toString();
-        // Add default date values to the model
-        model.addAttribute("fromDate", formattedDaysAgo);
-        model.addAttribute("toDate", formattedCurrentDate);
+            // Format the dates as yyyy-MM-dd
+            fromDate = passDate.toString();
+            toDate = currentDate.toString();
 
-        LocalDate dateWithMostExpense = expenseService.findDateWithMostExpenses(user, formattedDaysAgo, formattedCurrentDate);
+            model.addAttribute("fromDate", fromDate);
+            model.addAttribute("toDate", toDate);
+        }else {
+            model.addAttribute("fromDate", fromDate);
+            model.addAttribute("toDate", toDate);
+        }
+
+        LocalDate dateWithMostExpense = expenseService.findDateWithMostExpenses(user, fromDate, toDate);
         model.addAttribute("dateWithMostExpenses", dateWithMostExpense);
 
-        List<ItemEntity> topItems = expenseService.findTop3ItemsByDateRange(user, formattedDaysAgo, formattedCurrentDate);
+        List<ItemEntity> topItems = expenseService.findTop3ItemsByDateRange(user, fromDate, toDate);
         model.addAttribute("top3ItemWithMostExpenses", topItems);
 
-        double averageExpense = expenseService.calculateAverageSpendingByDateRange(user, formattedDaysAgo, formattedCurrentDate);
+        double averageExpense = expenseService.calculateAverageSpendingByDateRange(user, fromDate, toDate);
         model.addAttribute("averageExpenseByUSD", averageExpense);
 
         return "index";
@@ -84,7 +89,7 @@ public class ExpenseController {
         Integer userId = (Integer) httpSession.getAttribute("userId");
 
         if (userId == null) {
-            // Redirect to login if user is not authenticated
+            // Redirect to log in if user is not authenticated
             return "redirect:/login";
         }
         UserEntity user = userService.findById(userId);
@@ -105,8 +110,5 @@ public class ExpenseController {
         expenseService.createExpense(expenseEntity);
         return "redirect:/expenses";
     }
-
-
-
 
 }
