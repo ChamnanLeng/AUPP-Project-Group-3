@@ -145,7 +145,8 @@
                                 </div>
                                 <div class="ps-4">
                                     <h3 class="mb-1 fw-semibold fs-8 d-flex align-content-center" th:if="${averageExpenseByUSD != null}"
-                                        th:text="${#numbers.formatDecimal(averageExpenseByUSD, 0, 'COMMA', 2, 'POINT')} + ' USD'"></h3>
+                                        th:text="${#numbers.formatDecimal(averageExpenseByUSD, 1, 'COMMA', 2, 'POINT')} + ' USD'">
+                                    </h3>
                                     <p class="mb-0 text-dark" th:if="${averageExpenseByUSD != null}">Average Spending</p>
                                     <p class="mb-0 text-dark" th:if="${averageExpenseByUSD == null}">N/A Spending</p>
                                 </div>
