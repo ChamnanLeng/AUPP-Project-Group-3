@@ -24,19 +24,31 @@ import java.util.Map;
 @Controller
 @RequestMapping("/user")
 public class UserController {
-
     @Autowired
     private EmailService emailService;
-    
     @Autowired
     private UserImpl userService;
-
     @Autowired
     private ModelMapper modelMapper;
-
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @GetMapping("/registration")
+    public String showRegisterForm(Model model){
+        model.addAttribute("registration", new UserEntity());
+        return "register";
+    }
+
+    @PostMapping("/create")
+    public String createUser(@ModelAttribute("registration") @Validated UserEntity userEntity) {
+        RegisterResponse registerResponse = userService.createUser(userEntity);
+        if (registerResponse.getStatus().equals(true)){
+            return "redirect:/login";
+        }
+        else {
+            return "register";
+        }
+    }
     @GetMapping("")
     public ResponseEntity<?> getUsers() {
         Map<String, Object> jsonResponseMap = new LinkedHashMap<>();
@@ -57,23 +69,6 @@ public class UserController {
             jsonResponseMap.put("message", "Data is not found");
             return new ResponseEntity<>(jsonResponseMap, HttpStatus.NOT_FOUND);
         }
-    }
-
-    @GetMapping("/registration")
-    public String showRegisterForm(Model model){
-        model.addAttribute("registration", new UserEntity());
-        return "register";
-    }
-
-    @PostMapping("/create")
-    public String createUser(@ModelAttribute("registration") @Validated UserEntity userEntity) {
-        RegisterResponse registerResponse = userService.createUser(userEntity);
-            if (registerResponse.getStatus().equals(true)){
-                return "redirect:/login";
-            }
-            else {
-                return "register";
-            }
     }
 
     @GetMapping("/login_user")
