@@ -76,7 +76,7 @@
                                     <span th:if="${expense.itemId != null}" th:text="${expense.itemId.itemName}"></span>
                                     <span th:if="${expense.itemId == null}">N/A</span>
                                 </td>
-                                <td class="border-bottom-0" th:text="${expense.expenseAmount}"></td>
+                                <td class="border-bottom-0" th:text="${#numbers.formatDecimal(expense.expenseAmount, 1, 'COMMA', 2, 'POINT')}"></td>
                                 <td class="border-bottom-0">
                                     <div class="d-flex align-items-center gap-2">
                                         <span class="badge bg-primary rounded-3 fw-semibold" th:if="${expense.currencyId != null}" th:text="${expense.currencyId.currencyName}"></span>
